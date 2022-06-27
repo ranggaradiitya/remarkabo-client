@@ -24,7 +24,7 @@ const EditNoteForm = () => {
   useEffect(() => {
     const noteId = location.pathname.replace('/edit/', '');
     async function fetchData() {
-      const response = await fetch(`http://localhost:3001/note/${noteId}`);
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/note/${noteId}`);
       const data = await response.json();
       setCurrentNote(data);
     }
@@ -46,7 +46,7 @@ const EditNoteForm = () => {
       body: JSON.stringify(currentNote)
     };
     async function submitData() {
-      const response = await fetch(`http://localhost:3001/note/${currentNote._id}`, option);
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/note/${currentNote._id}`, option);
       if (response.ok) {
         setIsSuccess(true);
       } else {
@@ -63,7 +63,7 @@ const EditNoteForm = () => {
       headers: { 'Content-Type': 'application/json' }
     }
     async function deleteData() {
-      const response = await fetch(`http://localhost:3001/note/${currentNote._id}`, option);
+      const response = await fetch(`${process.env.REACT_APP_API_URL}/note/${currentNote._id}`, option);
       if (response.ok) {
         navigate('/');
       }
