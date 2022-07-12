@@ -1,17 +1,8 @@
-import styled from 'styled-components';
+import tw, { styled } from 'twin.macro';
 
-const Button = styled.button`
-  background: ${(props) => (props.danger ? '#F56565' : '#3182ce')};
-  color: white;
-  font-size: 1em;
-  margin: 1rem 0;
-  padding: 0.75rem;
-  border: 2px solid white;
-  border-radius: 5px;
-
-  &:hover {
-    opacity: 0.9;
-  }
-`;
+const Button = styled.button(({ danger }) => [
+  danger ? tw`bg-red-500 hover:bg-red-700` : tw`bg-blue-600 hover:bg-blue-700`,
+  tw`text-white text-base m-2 p-3 border rounded-md`
+]);
 
 export default Button;

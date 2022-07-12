@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
-import { Form, FormGroup, Label, Input, TextArea } from '../components/ui/Forms';
+import { unwrapResult } from '@reduxjs/toolkit';
+import { useDispatch } from 'react-redux';
+import { Form, FormGroup, FormButtonGroup, Input, TextArea } from '../components/ui/Forms';
 import Button from './ui/Button';
 import Message from '../components/ui/Message';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSave } from '@fortawesome/free-solid-svg-icons';
+import { addNewNote, statusReset } from '../features/notes/notesSlice';
 
 const InfoWrapper = (props) => {
   const { status } = props;
@@ -16,6 +21,7 @@ const InfoWrapper = (props) => {
 };
 
 const AddNoteForm = () => {
+  const dispatch = useDispatch();
   const [state, setState] = useState({ title: '', note: '' });
   const [isSuccess, setIsSuccess] = useState(null);
 
@@ -27,24 +33,24 @@ const AddNoteForm = () => {
     setState({ ...state, note: e.target.value });
   };
 
-  const handleSubmit = (e) => {
-    const option = {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(state)
-    };
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-    async function fetchData() {
-      const response = await fetch(`${process.env.REACT_APP_API_URL}/note`, option);
-      if (response.ok) {
+    try {
+      const actionResult = await dispatch(addNewNote(state));
+      const result = unwrapResult(actionResult);
+      if (result) {
         setIsSuccess(true);
       } else {
+        console.log('Error adding note');
         setIsSuccess(false);
       }
+    } catch (err) {
+      console.error('Terjadi kesalahan: ', err);
+      setIsSuccess(false);
+    } finally {
+      dispatch(statusReset());
     }
-
-    fetchData();
-    e.preventDefault();
   };
 
   const { title, note } = state;
@@ -54,16 +60,28 @@ const AddNoteForm = () => {
       <InfoWrapper status={isSuccess} />
       <Form onSubmit={handleSubmit}>
         <FormGroup>
-          <Label>Title</Label>
-          <Input type="text" name="title" value={title} onChange={handleTitleChange} />
+          <Input
+            type="text"
+            name="title"
+            placeholder='Title'
+            value={title}
+            onChange={handleTitleChange}
+          />
         </FormGroup>
         <FormGroup>
-          <Label>Note</Label>
-          <TextArea name="note" rows="12" value={note} onChange={handleNoteChange} />
+          <TextArea
+            name="note"
+            rows="12"
+            placeholder='Your content goes here..'
+            value={note}
+            onChange={handleNoteChange}
+          />
         </FormGroup>
-        <FormGroup>
-          <Button type="submit">Add</Button>
-        </FormGroup>
+        <FormButtonGroup>
+          <Button type='submit'>
+            <FontAwesomeIcon icon={faSave} /> &nbsp; Save
+          </Button>
+        </FormButtonGroup>
       </Form>
     </>
   );

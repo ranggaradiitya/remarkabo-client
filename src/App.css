@@ -1,0 +1,10 @@
+@font-face {
+  font-family: "Dank Mono";
+  font-style: normal;
+  font-weight: normal;
+  src: local("Dank Mono"), url("Dank-Mono.otf") format("opentype");
+}
+
+* {
+  font-family: "Dank Mono";
+}

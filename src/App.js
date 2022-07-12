@@ -1,23 +1,25 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-import styled from 'styled-components';
+import tw, { GlobalStyles } from 'twin.macro';
 import HomePage from './pages/Home';
 import AddPage from './pages/Add';
 import EditPage from './pages/Edit';
+import './App.css'
 
-const Container = styled.div`
-  text-align: center;
-`;
+const Container = tw.div`text-center`;
 
 function App() {
   return (
-    <Container>
-      <Routes>
-        <Route path="/add" element={<AddPage />} />
-        <Route path="/edit/:id" element={<EditPage />} />
-        <Route path="/" element={<HomePage />} />
-      </Routes>
-    </Container>
+    <div>
+      <GlobalStyles />
+      <Container>
+        <Routes>
+          <Route path="/add" element={<AddPage />} />
+          <Route path="/edit/:id" element={<EditPage />} />
+          <Route path="/" element={<HomePage />} />
+        </Routes>
+      </Container>
+    </div>
   );
 }
 
